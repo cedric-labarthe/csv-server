@@ -1,0 +1,23 @@
+package templates
+
+import (
+	"csv-server/components/button"
+	"csv-server/components/icon"
+)
+
+templ CopyButton(value string) {
+	@button.Button(button.Props{
+		Size:    button.SizeIcon,
+		Variant: button.VariantGhost,
+		Class:   "copy-btn",
+		Attributes: templ.Attributes{
+			"x-data":       "{ copied: false }",
+			"x-on:click":   "navigator.clipboard.writeText($el.dataset.copy).then(function() { copied = true; setTimeout(function() { copied = false }, 1500) })",
+			"x-bind:class": "copied ? 'text-green-600' : ''",
+			"data-copy":    value,
+		},
+	}) {
+		<span x-show="!copied">@icon.Copy(icon.Props{Size: 13})</span>
+		<span x-show="copied">@icon.CopyCheck(icon.Props{Size: 13})</span>
+	}
+}
