@@ -2,7 +2,7 @@ package handler
 
 import (
 	"csv-server/internal/csv"
-	"csv-server/templates"
+	"csv-server/templates/pages"
 	"csv-server/web"
 	"errors"
 	"log/slog"
@@ -52,7 +52,7 @@ func (h *Handler) serveDir(w http.ResponseWriter, r *http.Request, relPath strin
 		return
 	}
 
-	if err := templates.Index(relPath, entries).Render(r.Context(), w); err != nil {
+	if err := pages.Index(pages.IndexProps{CurrentPath: relPath, Entries: entries}).Render(r.Context(), w); err != nil {
 		h.logger.ErrorContext(r.Context(), "rendering index", "err", err)
 	}
 }
@@ -76,7 +76,7 @@ func (h *Handler) view(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := templates.Table(relPath, table.Headers, table.Rows).Render(r.Context(), w); err != nil {
+	if err := pages.Table(pages.TableProps{Filename: relPath, Headers: table.Headers, Rows: table.Rows}).Render(r.Context(), w); err != nil {
 		h.logger.ErrorContext(r.Context(), "rendering table", "path", relPath, "err", err)
 	}
 }

@@ -1,12 +1,16 @@
-package templates
+package components
 
-templ layout(title string) {
+type LayoutProps struct {
+	Title string
+}
+
+templ Layout(props LayoutProps) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<title>{ title } — CSV Viewer</title>
+			<title>{ props.Title } — CSV Viewer</title>
 			<link rel="stylesheet" href="/static/style.css"/>
 			<script src="https://cdn.tailwindcss.com"></script>
 			<script defer src="/static/alpine.min.js"></script>

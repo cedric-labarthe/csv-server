@@ -1,0 +1,42 @@
+package components
+
+import (
+	"csv-server/components/breadcrumb"
+	"strings"
+)
+
+type BreadcrumbProps struct {
+	CurrentPath string
+}
+
+templ Breadcrumb(props BreadcrumbProps) {
+	@breadcrumb.Breadcrumb() {
+		@breadcrumb.List() {
+			@breadcrumb.Item() {
+				@breadcrumb.Link(breadcrumb.LinkProps{Href: "/"}) {
+					root
+				}
+			}
+			if props.CurrentPath != "" {
+				for i, segment := range strings.Split(props.CurrentPath, "/") {
+					@breadcrumb.Item() {
+						@breadcrumb.Separator()
+					}
+					if i < len(strings.Split(props.CurrentPath, "/"))-1 {
+						@breadcrumb.Item() {
+							@breadcrumb.Link(breadcrumb.LinkProps{Href: "/browse/" + strings.Join(strings.Split(props.CurrentPath, "/")[:i+1], "/")}) {
+								{ segment }
+							}
+						}
+					} else {
+						@breadcrumb.Item(breadcrumb.ItemProps{Current: true}) {
+							@breadcrumb.Page() {
+								{ segment }
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,28 @@
+package components
+
+import (
+	"csv-server/components/button"
+	"csv-server/components/icon"
+)
+
+type EntryItemProps struct {
+	Name  string
+	Href  string
+	IsDir bool
+}
+
+templ EntryItem(props EntryItemProps) {
+	<li class="rounded-md border border-gray-200 overflow-hidden">
+		if props.IsDir {
+			@button.Button(button.Props{Variant: button.VariantGhost, Href: props.Href, FullWidth: true, Class: "justify-start gap-2 hover:bg-gray-100 font-medium"}) {
+				@icon.Folder(icon.Props{Size: 16, Class: "text-amber-500"})
+				{ props.Name }
+			}
+		} else {
+			@button.Button(button.Props{Variant: button.VariantGhost, Href: props.Href, FullWidth: true, Class: "justify-start gap-2 hover:bg-gray-100"}) {
+				@icon.File(icon.Props{Size: 16, Class: "text-blue-400"})
+				{ props.Name }
+			}
+		}
+	</li>
+}

@@ -64,12 +64,17 @@ csv-server/
 │   ├── config/config.go      # Config struct loaded from environment
 │   ├── csv/reader.go         # CSV parsing logic
 │   └── handler/handler.go    # HTTP handlers
-├── templates/                # One file per component or page, all package templates
-│   ├── layout.templ          # Base HTML shell (<link>, <script> only)
-│   ├── breadcrumb.templ      # Breadcrumb component + path helpers
-│   ├── copy_button.templ     # CopyButton component (templUI button + icon + Alpine)
-│   ├── index.templ           # Directory listing page
-│   └── table.templ           # CSV table page
+├── templates/
+│   ├── pages/                # package pages — one .templ per page
+│   │   ├── index.templ       # Directory listing page
+│   │   ├── table.templ       # CSV table page
+│   │   └── table_helpers.go  # truncate, parentURL (table-specific)
+│   └── components/           # package components — one .templ per component
+│       ├── layout.templ      # Base HTML shell (<link>, <script> only)
+│       ├── breadcrumb.templ  # Breadcrumb component
+│       ├── breadcrumb_helpers.go  # BreadcrumbTitle, JoinPath
+│       ├── copy_button.templ # CopyButton (templUI button + icon + Alpine)
+│       └── entry_item.templ  # File/dir list item
 ├── web/
 │   ├── web.go                # go:embed declaration
 │   └── static/

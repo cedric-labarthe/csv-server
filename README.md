@@ -1,19 +1,64 @@
 # csv-server
 
-Serveur HTTP minimal en Go pour démarrer rapidement le projet `csv-server`.
+A minimal Go HTTP server for browsing and viewing CSV files in a directory.
 
-## Prérequis
+## Requirements
 
 - Go 1.22+
+- [Templ](https://templ.guide/) (only needed when editing `.templ` files)
 
-## Lancer
+## Getting started
 
 ```bash
-go run .
+go run ./cmd/server
 ```
 
-Par défaut, le serveur écoute sur `:8080`.
+The server listens on `:8080` by default and serves files from `./data`.
 
-## Endpoint
+## Configuration
 
-- `GET /health` → `200 OK` avec le corps `ok`
+| Variable   | Default  | Description                    |
+| ---------- | -------- | ------------------------------ |
+| `PORT`     | `8080`   | HTTP listen port               |
+| `DATA_DIR` | `./data` | Directory containing CSV files |
+
+```bash
+DATA_DIR=/path/to/csvs PORT=9000 go run ./cmd/server
+```
+
+## Routes
+
+| Route               | Description                              |
+| ------------------- | ---------------------------------------- |
+| `GET /`             | Root directory listing                   |
+| `GET /browse/{path}`| Browse a subdirectory                    |
+| `GET /view/{path}`  | View a CSV file as a table               |
+| `GET /health`       | Health check — returns `200 OK` / `ok`   |
+
+## Development
+
+```bash
+# After editing .templ files:
+templ generate ./templates/...
+
+go build ./cmd/server   # Build
+go test ./...           # Tests
+go vet ./...            # Vet
+```
+
+## Project structure
+
+```
+csv-server/
+├── cmd/server/main.go        # Entry point
+├── internal/
+│   ├── config/               # Config from environment
+│   ├── csv/                  # CSV parsing and directory listing
+│   └── handler/              # HTTP handlers
+├── templates/
+│   ├── pages/                # Page-level templ components
+│   └── components/           # Reusable UI components
+├── components/               # templUI components (button, icon, badge…)
+├── web/static/               # Embedded CSS and JS
+└── data/                     # Default CSV directory (dev)
+```

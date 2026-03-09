@@ -1,11 +1,15 @@
-package templates
+package components
 
 import (
 	"csv-server/components/button"
 	"csv-server/components/icon"
 )
 
-templ CopyButton(value string) {
+type CopyButtonProps struct {
+	Value string
+}
+
+templ CopyButton(props CopyButtonProps) {
 	@button.Button(button.Props{
 		Size:    button.SizeIcon,
 		Variant: button.VariantGhost,
@@ -14,7 +18,7 @@ templ CopyButton(value string) {
 			"x-data":       "{ copied: false }",
 			"x-on:click":   "navigator.clipboard.writeText($el.dataset.copy).then(function() { copied = true; setTimeout(function() { copied = false }, 1500) })",
 			"x-bind:class": "copied ? 'text-green-600' : ''",
-			"data-copy":    value,
+			"data-copy":    props.Value,
 		},
 	}) {
 		<span x-show="!copied">@icon.Copy(icon.Props{Size: 13})</span>
