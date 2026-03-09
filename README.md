@@ -1,6 +1,6 @@
 # csv-server
 
-A minimal Go HTTP server for browsing and viewing CSV files in a directory.
+A minimal Go HTTP server that lets you browse a directory tree and open CSV files rendered as HTML tables.
 
 ## Requirements
 
