@@ -122,6 +122,8 @@ templ MyComponent() {
 
 Available icon names come from the Lucide set — browse `components/icon/icon_defs.go`.
 
+**Always use templUI components** instead of raw HTML elements — never write a bare `<button>`, `<a>`, `<input>`, etc. when a templUI component exists for it. Use `button.Button`, `badge.Badge`, `card.Card`, etc.
+
 ### Static Assets
 
 Custom styles and JS are embedded at build time via `go:embed` in `web/web.go` and served by `http.FileServerFS`. Tailwind CSS is loaded from CDN (acceptable for an internal tool — use the standalone Tailwind CLI for production builds).
