@@ -82,14 +82,20 @@ func naturalLess(a, b string) bool {
 		aRune, aWidth := utf8.DecodeRuneInString(a)
 		bRune, bWidth := utf8.DecodeRuneInString(b)
 
-		aIsDigit := unicode.IsDigit(aRune)
-		bIsDigit := unicode.IsDigit(bRune)
+		aIsDigit := aRune >= '0' && aRune <= '9'
+		bIsDigit := bRune >= '0' && bRune <= '9'
 
 		if aIsDigit && bIsDigit {
 			aNum, aRest := splitLeadingDigits(a)
 			bNum, bRest := splitLeadingDigits(b)
 			aTrim := strings.TrimLeft(aNum, "0")
 			bTrim := strings.TrimLeft(bNum, "0")
+			if aTrim == "" {
+				aTrim = "0"
+			}
+			if bTrim == "" {
+				bTrim = "0"
+			}
 			if len(aTrim) != len(bTrim) {
 				return len(aTrim) < len(bTrim)
 			}
@@ -119,12 +125,8 @@ func naturalLess(a, b string) bool {
 
 func splitLeadingDigits(s string) (digits, rest string) {
 	i := 0
-	for i < len(s) {
-		r, width := utf8.DecodeRuneInString(s[i:])
-		if !unicode.IsDigit(r) {
-			break
-		}
-		i += width
+	for i < len(s) && s[i] >= '0' && s[i] <= '9' {
+		i++
 	}
 	return s[:i], s[i:]
 }

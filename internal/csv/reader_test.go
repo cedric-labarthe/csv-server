@@ -35,10 +35,18 @@ func TestNaturalLess(t *testing.T) {
 		{"file10", "file2", false},
 		{"file10", "file10", false},
 
-		// Numeric segments with leading zeros: "01" and "1" are numerically equal,
-		// so naturalLess returns false in both directions.
+		// Numeric segments with leading zeros: "01" and "1" are numerically equal.
 		{"file01", "file1", false},
 		{"file1", "file01", false},
+
+		// All-zero segments are numerically equal.
+		{"file000", "file0", false},
+		{"file0", "file000", false},
+
+		// Non-ASCII digits (e.g. Arabic-Indic ١٢) are NOT treated as numeric
+		// segments; they sort as plain characters.
+		{"file١", "file٢", true},
+		{"file2", "file١", true}, // ASCII '2'(50) < Arabic-Indic '١'(1633) — compared as chars
 
 		// Empty strings
 		{"", "", false},
