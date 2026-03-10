@@ -12,6 +12,7 @@ import (
 	"sort"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 )
 
 type Table struct {
@@ -61,8 +62,11 @@ func naturalLess(a, b string) bool {
 			return true
 		}
 
-		aIsDigit := unicode.IsDigit(rune(a[0]))
-		bIsDigit := unicode.IsDigit(rune(b[0]))
+		aRune, aWidth := utf8.DecodeRuneInString(a)
+		bRune, bWidth := utf8.DecodeRuneInString(b)
+
+		aIsDigit := unicode.IsDigit(aRune)
+		bIsDigit := unicode.IsDigit(bRune)
 
 		if aIsDigit && bIsDigit {
 			aNum, aRest := splitLeadingDigits(a)
@@ -74,17 +78,21 @@ func naturalLess(a, b string) bool {
 			continue
 		}
 
-		if rune(a[0]) != rune(b[0]) {
-			return unicode.ToLower(rune(a[0])) < unicode.ToLower(rune(b[0]))
+		if aRune != bRune {
+			return unicode.ToLower(aRune) < unicode.ToLower(bRune)
 		}
-		a, b = a[1:], b[1:]
+		a, b = a[aWidth:], b[bWidth:]
 	}
 }
 
 func splitLeadingDigits(s string) (digits, rest string) {
 	i := 0
-	for i < len(s) && unicode.IsDigit(rune(s[i])) {
-		i++
+	for i < len(s) {
+		r, width := utf8.DecodeRuneInString(s[i:])
+		if !unicode.IsDigit(r) {
+			break
+		}
+		i += width
 	}
 	return s[:i], s[i:]
 }
