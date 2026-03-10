@@ -9,7 +9,9 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
+	"unicode"
 )
 
 type Table struct {
@@ -38,7 +40,53 @@ func ListEntries(dir string) ([]Entry, error) {
 		}
 	}
 
+	sort.Slice(entries, func(i, j int) bool {
+		if entries[i].IsDir != entries[j].IsDir {
+			return entries[i].IsDir
+		}
+		return naturalLess(entries[i].Name, entries[j].Name)
+	})
+
 	return entries, nil
+}
+
+// naturalLess compares two strings using natural sort order so that numeric
+// segments are compared by value ("2" < "10") instead of lexicographically.
+func naturalLess(a, b string) bool {
+	for {
+		if b == "" {
+			return false
+		}
+		if a == "" {
+			return true
+		}
+
+		aIsDigit := unicode.IsDigit(rune(a[0]))
+		bIsDigit := unicode.IsDigit(rune(b[0]))
+
+		if aIsDigit && bIsDigit {
+			aNum, aRest := splitLeadingDigits(a)
+			bNum, bRest := splitLeadingDigits(b)
+			if aNum != bNum {
+				return len(aNum) < len(bNum) || (len(aNum) == len(bNum) && aNum < bNum)
+			}
+			a, b = aRest, bRest
+			continue
+		}
+
+		if rune(a[0]) != rune(b[0]) {
+			return unicode.ToLower(rune(a[0])) < unicode.ToLower(rune(b[0]))
+		}
+		a, b = a[1:], b[1:]
+	}
+}
+
+func splitLeadingDigits(s string) (digits, rest string) {
+	i := 0
+	for i < len(s) && unicode.IsDigit(rune(s[i])) {
+		i++
+	}
+	return s[:i], s[i:]
 }
 
 // ReadTable parses a CSV file from fsys and returns its headers and rows.
