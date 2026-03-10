@@ -9,7 +9,10 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 )
 
 type Table struct {
@@ -38,7 +41,94 @@ func ListEntries(dir string) ([]Entry, error) {
 		}
 	}
 
+	sort.SliceStable(entries, func(i, j int) bool {
+		if entries[i].IsDir != entries[j].IsDir {
+			return entries[i].IsDir
+		}
+		nameI, nameJ := entries[i].Name, entries[j].Name
+		if naturalLess(nameI, nameJ) {
+			return true
+		}
+		if naturalLess(nameJ, nameI) {
+			return false
+		}
+		return nameI < nameJ
+	})
+
 	return entries, nil
+}
+
+// naturalLess compares two strings using natural sort order so that numeric
+// segments are compared by value ("2" < "10") instead of lexicographically.
+// Alphabetic comparisons are case-insensitive; when two strings differ only in
+// case, the one whose first differing rune has the lower Unicode code point
+// sorts first (deterministic tie-breaker).
+func naturalLess(a, b string) bool {
+	// firstCaseDiff records the ordering of the first position where the runes
+	// differ only in case: -1 means a's rune < b's rune, +1 means a's rune > b's rune.
+	firstCaseDiff := 0
+	for {
+		if b == "" {
+			if a == "" {
+				// Strings are equal ignoring case; use case tie-breaker.
+				return firstCaseDiff < 0
+			}
+			return false
+		}
+		if a == "" {
+			return true
+		}
+
+		aRune, aWidth := utf8.DecodeRuneInString(a)
+		bRune, bWidth := utf8.DecodeRuneInString(b)
+
+		aIsDigit := aRune >= '0' && aRune <= '9'
+		bIsDigit := bRune >= '0' && bRune <= '9'
+
+		if aIsDigit && bIsDigit {
+			aNum, aRest := splitLeadingDigits(a)
+			bNum, bRest := splitLeadingDigits(b)
+			aTrim := strings.TrimLeft(aNum, "0")
+			bTrim := strings.TrimLeft(bNum, "0")
+			if aTrim == "" {
+				aTrim = "0"
+			}
+			if bTrim == "" {
+				bTrim = "0"
+			}
+			if len(aTrim) != len(bTrim) {
+				return len(aTrim) < len(bTrim)
+			}
+			if aTrim != bTrim {
+				return aTrim < bTrim
+			}
+			a, b = aRest, bRest
+			continue
+		}
+
+		aLow, bLow := unicode.ToLower(aRune), unicode.ToLower(bRune)
+		if aLow != bLow {
+			return aLow < bLow
+		}
+		// Same case-folded rune: record the first case-only difference as a
+		// deterministic tie-breaker and continue scanning.
+		if aRune != bRune && firstCaseDiff == 0 {
+			if aRune < bRune {
+				firstCaseDiff = -1
+			} else {
+				firstCaseDiff = 1
+			}
+		}
+		a, b = a[aWidth:], b[bWidth:]
+	}
+}
+
+func splitLeadingDigits(s string) (digits, rest string) {
+	i := 0
+	for i < len(s) && s[i] >= '0' && s[i] <= '9' {
+		i++
+	}
+	return s[:i], s[i:]
 }
 
 // ReadTable parses a CSV file from fsys and returns its headers and rows.
