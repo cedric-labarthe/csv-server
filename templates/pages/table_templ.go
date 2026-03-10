@@ -57,7 +57,7 @@ func Table(props TableProps) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<header>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<header><div class=\"header-top\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -87,14 +87,18 @@ func Table(props TableProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<h1>")
+			templ_7745c5c3_Err = components.DarkModeToggle().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><h1>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(props.Filename)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/table.templ`, Line: 26, Col: 23}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/table.templ`, Line: 29, Col: 23}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -119,7 +123,7 @@ func Table(props TableProps) templ.Component {
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d row(s) · %d column(s)", len(props.Rows), len(props.Headers)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/table.templ`, Line: 28, Col: 83}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/table.templ`, Line: 31, Col: 83}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -221,7 +225,7 @@ func Table(props TableProps) templ.Component {
 											var templ_7745c5c3_Var13 string
 											templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(header)
 											if templ_7745c5c3_Err != nil {
-												return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/table.templ`, Line: 42, Col: 19}
+												return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/table.templ`, Line: 45, Col: 19}
 											}
 											_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 											if templ_7745c5c3_Err != nil {
@@ -295,7 +299,7 @@ func Table(props TableProps) templ.Component {
 												var templ_7745c5c3_Var17 string
 												templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(truncate(cell, maxCellChars))
 												if templ_7745c5c3_Err != nil {
-													return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/table.templ`, Line: 53, Col: 67}
+													return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/pages/table.templ`, Line: 56, Col: 67}
 												}
 												_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 												if templ_7745c5c3_Err != nil {

@@ -46,7 +46,7 @@ func Layout(props LayoutProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " — CSV Viewer</title><link rel=\"stylesheet\" href=\"/static/style.css\"><script src=\"https://cdn.tailwindcss.com\"></script><script defer src=\"/static/alpine.min.js\"></script></head><body><main>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " — CSV Viewer</title><script>\n\t\t\t\t(function() {\n\t\t\t\t\tvar theme = localStorage.theme;\n\t\t\t\t\tif (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {\n\t\t\t\t\t\tdocument.documentElement.classList.add('dark');\n\t\t\t\t\t}\n\t\t\t\t})();\n\t\t\t</script><script>tailwind.config = { darkMode: 'class' }</script><link rel=\"stylesheet\" href=\"/static/style.css\"><script src=\"https://cdn.tailwindcss.com\"></script><script defer src=\"/static/alpine.min.js\"></script></head><body><main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

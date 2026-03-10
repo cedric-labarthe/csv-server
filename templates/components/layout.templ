@@ -11,6 +11,15 @@ templ Layout(props LayoutProps) {
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<title>{ props.Title } — CSV Viewer</title>
+			<script>
+				(function() {
+					var theme = localStorage.theme;
+					if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+						document.documentElement.classList.add('dark');
+					}
+				})();
+			</script>
+			<script>tailwind.config = { darkMode: 'class' }</script>
 			<link rel="stylesheet" href="/static/style.css"/>
 			<script src="https://cdn.tailwindcss.com"></script>
 			<script defer src="/static/alpine.min.js"></script>

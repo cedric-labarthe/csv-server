@@ -12,6 +12,13 @@ body {
 	line-height: 1.5;
 }
 
+/* ── Dark mode ── */
+
+.dark body {
+	background: #0f1117;
+	color: #e2e8f0;
+}
+
 main {
 	display: flex;
 	flex-direction: column;
@@ -25,6 +32,13 @@ main {
 header {
 	flex-shrink: 0;
 	margin-bottom: 1.5rem;
+}
+
+.header-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 0.5rem;
 }
 
 h1 {
@@ -45,7 +59,6 @@ h1 {
 	align-items: center;
 	gap: 0.25rem;
 	font-size: 0.9rem;
-	margin-bottom: 0.5rem;
 	flex-wrap: wrap;
 }
 
@@ -55,6 +68,10 @@ h1 {
 	color: #495057;
 	font-weight: 500;
 }
+
+.dark .breadcrumb .sep { color: #4a5568; }
+
+.dark .breadcrumb .current { color: #a0aec0; }
 
 .empty {
 	color: #6c757d;
@@ -98,6 +115,17 @@ tbody td {
 
 tbody tr:nth-child(even) { background: #f8f9fa; }
 tbody tr:hover { background: #e9ecef; }
+
+.dark thead th {
+	background: #1e2433;
+	border-color: #2d3748;
+	color: #e2e8f0;
+}
+
+.dark tbody td { border-color: #2d3748; }
+
+.dark tbody tr:nth-child(even) { background: #141824; }
+.dark tbody tr:hover { background: #1a2035; }
 
 /* ── Cell ── */
 
@@ -144,3 +172,10 @@ td:hover .copy-btn { opacity: 1; }
 }
 
 .copy-btn.copied { color: #198754; }
+
+.dark .copy-btn { color: #4a5568; }
+
+.dark .copy-btn:hover {
+	background: #2d3748;
+	color: #e2e8f0;
+}
