@@ -41,11 +41,18 @@ func ListEntries(dir string) ([]Entry, error) {
 		}
 	}
 
-	sort.Slice(entries, func(i, j int) bool {
+	sort.SliceStable(entries, func(i, j int) bool {
 		if entries[i].IsDir != entries[j].IsDir {
 			return entries[i].IsDir
 		}
-		return naturalLess(entries[i].Name, entries[j].Name)
+		nameI, nameJ := entries[i].Name, entries[j].Name
+		if naturalLess(nameI, nameJ) {
+			return true
+		}
+		if naturalLess(nameJ, nameI) {
+			return false
+		}
+		return nameI < nameJ
 	})
 
 	return entries, nil
@@ -81,8 +88,13 @@ func naturalLess(a, b string) bool {
 		if aIsDigit && bIsDigit {
 			aNum, aRest := splitLeadingDigits(a)
 			bNum, bRest := splitLeadingDigits(b)
-			if aNum != bNum {
-				return len(aNum) < len(bNum) || (len(aNum) == len(bNum) && aNum < bNum)
+			aTrim := strings.TrimLeft(aNum, "0")
+			bTrim := strings.TrimLeft(bNum, "0")
+			if len(aTrim) != len(bTrim) {
+				return len(aTrim) < len(bTrim)
+			}
+			if aTrim != bTrim {
+				return aTrim < bTrim
 			}
 			a, b = aRest, bRest
 			continue
