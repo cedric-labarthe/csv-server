@@ -53,9 +53,19 @@ func ListEntries(dir string) ([]Entry, error) {
 
 // naturalLess compares two strings using natural sort order so that numeric
 // segments are compared by value ("2" < "10") instead of lexicographically.
+// Alphabetic comparisons are case-insensitive; when two strings differ only in
+// case, the one whose first differing rune has the lower Unicode code point
+// sorts first (deterministic tie-breaker).
 func naturalLess(a, b string) bool {
+	// firstCaseDiff records the ordering of the first position where the runes
+	// differ only in case: -1 means a's rune < b's rune, +1 means a's rune > b's rune.
+	firstCaseDiff := 0
 	for {
 		if b == "" {
+			if a == "" {
+				// Strings are equal ignoring case; use case tie-breaker.
+				return firstCaseDiff < 0
+			}
 			return false
 		}
 		if a == "" {
@@ -78,8 +88,18 @@ func naturalLess(a, b string) bool {
 			continue
 		}
 
-		if aRune != bRune {
-			return unicode.ToLower(aRune) < unicode.ToLower(bRune)
+		aLow, bLow := unicode.ToLower(aRune), unicode.ToLower(bRune)
+		if aLow != bLow {
+			return aLow < bLow
+		}
+		// Same case-folded rune: record the first case-only difference as a
+		// deterministic tie-breaker and continue scanning.
+		if aRune != bRune && firstCaseDiff == 0 {
+			if aRune < bRune {
+				firstCaseDiff = -1
+			} else {
+				firstCaseDiff = 1
+			}
 		}
 		a, b = a[aWidth:], b[bWidth:]
 	}
