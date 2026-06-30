@@ -22,7 +22,7 @@ RUN go mod download
 COPY --chown=app:app . .
 
 RUN mkdir -p /home/app/.cache/go-build /home/app/go/pkg/mod \
-    && chown -R app:app /home/app ${APP_HOME}
+    && chown -R app:app /home/app
 
 USER app
 
