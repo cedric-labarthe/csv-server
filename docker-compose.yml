@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /workspace
+    environment:
+      PORT: "8080"
+      DATA_DIR: "/workspace/data"
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/workspace
+      - gomodcache:/home/app/go/pkg/mod
+      - gocache:/home/app/.cache/go-build
+    stdin_open: true
+    tty: true
+
+volumes:
+  gomodcache:
+  gocache:
