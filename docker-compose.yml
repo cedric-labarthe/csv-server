@@ -4,7 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
     working_dir: /workspace
-    command: ["go", "run", "./cmd/server"]
     environment:
       PORT: "8080"
       DATA_DIR: "/workspace/data"
