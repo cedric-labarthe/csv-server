@@ -11,17 +11,40 @@ templ Layout(props LayoutProps) {
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<title>{ props.Title } — CSV Viewer</title>
-			<script>
-				(function() {
-					var theme = localStorage.theme;
-					if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-						document.documentElement.classList.add('dark');
-					}
-				})();
-			</script>
-			<script>tailwind.config = { darkMode: 'class' }</script>
 			<link rel="stylesheet" href="/static/style.css"/>
 			<script src="https://cdn.tailwindcss.com"></script>
+			<style type="text/tailwindcss">
+				@custom-variant dark (&:where(.dark, .dark *));
+				@theme inline {
+					--color-background: var(--background);
+					--color-foreground: var(--foreground);
+					--color-card: var(--card);
+					--color-card-foreground: var(--card-foreground);
+					--color-popover: var(--popover);
+					--color-popover-foreground: var(--popover-foreground);
+					--color-primary: var(--primary);
+					--color-primary-foreground: var(--primary-foreground);
+					--color-secondary: var(--secondary);
+					--color-secondary-foreground: var(--secondary-foreground);
+					--color-muted: var(--muted);
+					--color-muted-foreground: var(--muted-foreground);
+					--color-accent: var(--accent);
+					--color-accent-foreground: var(--accent-foreground);
+					--color-destructive: var(--destructive);
+					--color-border: var(--border);
+					--color-input: var(--input);
+					--color-ring: var(--ring);
+				}
+			</style>
+			// Apply theme immediately to prevent a flash of the wrong theme.
+			<script>
+				(function () {
+					const stored = localStorage.getItem('theme');
+					const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+					const isDark = stored ? stored === 'dark' : prefersDark;
+					document.documentElement.classList.toggle('dark', isDark);
+				}());
+			</script>
 			<script defer src="/static/alpine.min.js"></script>
 		</head>
 		<body>
