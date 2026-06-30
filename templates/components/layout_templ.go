@@ -8,6 +8,11 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import (
+	"csv-server/components/button"
+	"csv-server/components/icon"
+)
+
 type LayoutProps struct {
 	Title string
 }
@@ -40,13 +45,60 @@ func Layout(props LayoutProps) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(props.Title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/layout.templ`, Line: 13, Col: 23}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/layout.templ`, Line: 18, Col: 23}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " — CSV Viewer</title><link rel=\"stylesheet\" href=\"/static/style.css\"><script src=\"https://cdn.tailwindcss.com\"></script><script defer src=\"/static/alpine.min.js\"></script></head><body><main>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " — CSV Viewer</title><link rel=\"stylesheet\" href=\"/static/style.css\"><script src=\"https://cdn.tailwindcss.com\"></script><style type=\"text/tailwindcss\">\n\t\t\t\t@custom-variant dark (&:where(.dark, .dark *));\n\t\t\t\t@theme inline {\n\t\t\t\t\t--color-background: var(--background);\n\t\t\t\t\t--color-foreground: var(--foreground);\n\t\t\t\t\t--color-card: var(--card);\n\t\t\t\t\t--color-card-foreground: var(--card-foreground);\n\t\t\t\t\t--color-popover: var(--popover);\n\t\t\t\t\t--color-popover-foreground: var(--popover-foreground);\n\t\t\t\t\t--color-primary: var(--primary);\n\t\t\t\t\t--color-primary-foreground: var(--primary-foreground);\n\t\t\t\t\t--color-secondary: var(--secondary);\n\t\t\t\t\t--color-secondary-foreground: var(--secondary-foreground);\n\t\t\t\t\t--color-muted: var(--muted);\n\t\t\t\t\t--color-muted-foreground: var(--muted-foreground);\n\t\t\t\t\t--color-accent: var(--accent);\n\t\t\t\t\t--color-accent-foreground: var(--accent-foreground);\n\t\t\t\t\t--color-destructive: var(--destructive);\n\t\t\t\t\t--color-border: var(--border);\n\t\t\t\t\t--color-input: var(--input);\n\t\t\t\t\t--color-ring: var(--ring);\n\t\t\t\t}\n\t\t\t</style><script>\n\t\t\t\t(function () {\n\t\t\t\t\tconst stored = localStorage.getItem('theme');\n\t\t\t\t\tconst prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n\t\t\t\t\tconst isDark = stored ? stored === 'dark' : prefersDark;\n\t\t\t\t\tdocument.documentElement.classList.toggle('dark', isDark);\n\t\t\t\t}());\n\t\t\t</script><script defer src=\"/static/alpine.min.js\"></script></head><body>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var3 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+			if !templ_7745c5c3_IsBuffer {
+				defer func() {
+					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err == nil {
+						templ_7745c5c3_Err = templ_7745c5c3_BufErr
+					}
+				}()
+			}
+			ctx = templ.InitializeContext(ctx)
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<span class=\"icon-sun\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = icon.Sun(icon.Props{Size: 18}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span> <span class=\"icon-moon\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = icon.Moon(icon.Props{Size: 18}).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			return nil
+		})
+		templ_7745c5c3_Err = button.Button(button.Props{
+			Size:       button.SizeIcon,
+			Variant:    button.VariantOutline,
+			Class:      "fixed top-4 right-4 z-50",
+			Attributes: templ.Attributes{"onclick": "toggleTheme()", "aria-label": "Toggle dark mode"},
+		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -54,7 +106,7 @@ func Layout(props LayoutProps) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</main><script src=\"/static/app.js\"></script></body></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</main><script src=\"/static/app.js\"></script></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
