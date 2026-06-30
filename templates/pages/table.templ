@@ -19,10 +19,13 @@ type TableProps struct {
 templ Table(props TableProps) {
 	@components.Layout(components.LayoutProps{Title: props.Filename}) {
 		<header>
-			@button.Button(button.Props{Variant: button.VariantGhost, Href: parentURL(props.Filename)}) {
-				@icon.ArrowLeft(icon.Props{Size: 16})
-				Back to file list
-			}
+			<div class="header-top">
+				@button.Button(button.Props{Variant: button.VariantGhost, Href: parentURL(props.Filename)}) {
+					@icon.ArrowLeft(icon.Props{Size: 16})
+					Back to file list
+				}
+				@components.DarkModeToggle()
+			</div>
 			<h1>{ props.Filename }</h1>
 			@badge.Badge(badge.Props{Variant: badge.VariantSecondary}) {
 				{ fmt.Sprintf("%d row(s) · %d column(s)", len(props.Rows), len(props.Headers)) }

@@ -1,0 +1,21 @@
+package components
+
+import (
+	"csv-server/components/button"
+	"csv-server/components/icon"
+)
+
+templ DarkModeToggle() {
+	@button.Button(button.Props{
+		Size:    button.SizeIcon,
+		Variant: button.VariantGhost,
+		Attributes: templ.Attributes{
+			"x-data":     "{ dark: document.documentElement.classList.contains('dark') }",
+			"x-on:click": "dark = !dark; document.documentElement.classList.toggle('dark', dark); localStorage.theme = dark ? 'dark' : 'light'",
+			"title":      "Toggle dark mode",
+		},
+	}) {
+		<span x-show="!dark">@icon.Moon(icon.Props{Size: 16})</span>
+		<span x-show="dark">@icon.Sun(icon.Props{Size: 16})</span>
+	}
+}

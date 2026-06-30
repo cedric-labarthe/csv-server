@@ -16,7 +16,10 @@ type IndexProps struct {
 templ Index(props IndexProps) {
 	@components.Layout(components.LayoutProps{Title: components.BreadcrumbTitle(props.CurrentPath)}) {
 		<header>
-			@components.Breadcrumb(components.BreadcrumbProps{CurrentPath: props.CurrentPath})
+			<div class="header-top">
+				@components.Breadcrumb(components.BreadcrumbProps{CurrentPath: props.CurrentPath})
+				@components.DarkModeToggle()
+			</div>
 			@badge.Badge(badge.Props{Variant: badge.VariantSecondary}) {
 				{ fmt.Sprintf("%d item(s)", len(props.Entries)) }
 			}

@@ -12,14 +12,14 @@ type EntryItemProps struct {
 }
 
 templ EntryItem(props EntryItemProps) {
-	<li class="rounded-md border border-gray-200 overflow-hidden">
+	<li class="rounded-md border border-gray-200 dark:border-zinc-700 overflow-hidden">
 		if props.IsDir {
-			@button.Button(button.Props{Variant: button.VariantGhost, Href: props.Href, FullWidth: true, Class: "justify-start gap-2 hover:bg-gray-100 font-medium"}) {
+			@button.Button(button.Props{Variant: button.VariantGhost, Href: props.Href, FullWidth: true, Class: "justify-start gap-2 hover:bg-gray-100 dark:hover:bg-zinc-800 font-medium"}) {
 				@icon.Folder(icon.Props{Size: 16, Class: "text-amber-500"})
 				{ props.Name }
 			}
 		} else {
-			@button.Button(button.Props{Variant: button.VariantGhost, Href: props.Href, FullWidth: true, Class: "justify-start gap-2 hover:bg-gray-100"}) {
+			@button.Button(button.Props{Variant: button.VariantGhost, Href: props.Href, FullWidth: true, Class: "justify-start gap-2 hover:bg-gray-100 dark:hover:bg-zinc-800"}) {
 				@icon.File(icon.Props{Size: 16, Class: "text-blue-400"})
 				{ props.Name }
 			}

@@ -1,10 +1,5 @@
 package components
 
-import (
-	"csv-server/components/button"
-	"csv-server/components/icon"
-)
-
 type LayoutProps struct {
 	Title string
 }
@@ -53,15 +48,6 @@ templ Layout(props LayoutProps) {
 			<script defer src="/static/alpine.min.js"></script>
 		</head>
 		<body>
-			@button.Button(button.Props{
-				Size:       button.SizeIcon,
-				Variant:    button.VariantOutline,
-				Class:      "fixed top-4 right-4 z-50",
-				Attributes: templ.Attributes{"onclick": "toggleTheme()", "aria-label": "Toggle dark mode"},
-			}) {
-				<span class="icon-sun">@icon.Sun(icon.Props{Size: 18})</span>
-				<span class="icon-moon">@icon.Moon(icon.Props{Size: 18})</span>
-			}
 			<main>
 				{ children... }
 			</main>
