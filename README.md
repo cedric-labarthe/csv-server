@@ -4,7 +4,7 @@ A minimal Go HTTP server that lets you browse a directory tree and open CSV file
 
 ## Requirements
 
-- Go 1.22+
+- Go 1.26+
 - [Templ](https://templ.guide/) (only needed when editing `.templ` files)
 
 ## Getting started
