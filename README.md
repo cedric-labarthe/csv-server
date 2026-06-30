@@ -35,6 +35,34 @@ DATA_DIR=/path/to/csvs PORT=9000 go run ./cmd/server
 | `GET /view/{path}`  | View a CSV file as a table               |
 | `GET /health`       | Health check — returns `200 OK` / `ok`   |
 
+
+## Docker (development)
+
+Build the image:
+
+```bash
+docker build -t csv-server-dev .
+```
+
+Start the development container with source bind-mounted and port `8080` published:
+
+```bash
+docker compose up --build
+```
+
+Run commands inside the container (full Go toolchain available):
+
+```bash
+# Run the app
+docker compose run --rm app go run ./cmd/server
+
+# Build the app
+docker compose run --rm app go build -o /tmp/server ./cmd/server
+
+# Run tests
+docker compose run --rm app go test ./...
+```
+
 ## Development
 
 ```bash
