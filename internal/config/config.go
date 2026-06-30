@@ -25,12 +25,13 @@ func Load() (Config, error) {
 		port = "8080"
 	}
 
-	// TODO: Check the need for a configurable host address, e.g. for running in a container.
-	// This one should be fine to run the server locally
-	localAddr := "127.0.0.1"
+	host, ok := os.LookupEnv("HOST")
+	if !ok {
+		host = "0.0.0.0"
+	}
 
 	return Config{
-		Addr:    localAddr + ":" + port,
+		Addr:    host + ":" + port,
 		DataDir: dataDir,
 	}, nil
 }

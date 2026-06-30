@@ -17,10 +17,11 @@ The server listens on `:8080` by default and serves files from `./data`.
 
 ## Configuration
 
-| Variable   | Default  | Description                    |
-| ---------- | -------- | ------------------------------ |
-| `PORT`     | `8080`   | HTTP listen port               |
-| `DATA_DIR` | `./data` | Directory containing CSV files |
+| Variable   | Default    | Description                    |
+| ---------- | ---------- | ------------------------------ |
+| `HOST`     | `0.0.0.0`  | HTTP listen address            |
+| `PORT`     | `8080`     | HTTP listen port               |
+| `DATA_DIR` | `./data`   | Directory containing CSV files |
 
 ```bash
 DATA_DIR=/path/to/csvs PORT=9000 go run ./cmd/server
