@@ -50,7 +50,7 @@ func CopyButton(props CopyButtonProps) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<span x-show=\"!copied\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<span class=\"copy-btn-icon copy-btn-icon-default\" aria-hidden=\"true\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -58,7 +58,7 @@ func CopyButton(props CopyButtonProps) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</span> <span x-show=\"copied\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</span> <span class=\"copy-btn-icon copy-btn-icon-copied\" aria-hidden=\"true\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -77,10 +77,8 @@ func CopyButton(props CopyButtonProps) templ.Component {
 			Variant: button.VariantGhost,
 			Class:   "copy-btn",
 			Attributes: templ.Attributes{
-				"x-data":       "{ copied: false }",
-				"x-on:click":   "navigator.clipboard.writeText($el.dataset.copy).then(function() { copied = true; setTimeout(function() { copied = false }, 1500) })",
-				"x-bind:class": "copied ? 'text-green-600' : ''",
-				"data-copy":    props.Value,
+				"type":      "button",
+				"data-copy": props.Value,
 			},
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {

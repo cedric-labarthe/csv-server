@@ -47,6 +47,23 @@ body {
 	color: #e2e8f0;
 }
 
+.theme-toggle-icon {
+	display: inline-flex;
+	align-items: center;
+}
+
+.theme-toggle-sun {
+	display: none;
+}
+
+.dark .theme-toggle-moon {
+	display: none;
+}
+
+.dark .theme-toggle-sun {
+	display: inline-flex;
+}
+
 main {
 	display: flex;
 	flex-direction: column;
@@ -199,7 +216,26 @@ td:hover .copy-btn { opacity: 1; }
 	color: var(--secondary);
 }
 
-.copy-btn.copied { color: var(--success); }
+.copy-btn-icon {
+	display: inline-flex;
+	align-items: center;
+}
+
+.copy-btn-icon-copied {
+	display: none;
+}
+
+.copy-btn.is-copied {
+	color: var(--success);
+}
+
+.copy-btn.is-copied .copy-btn-icon-default {
+	display: none;
+}
+
+.copy-btn.is-copied .copy-btn-icon-copied {
+	display: inline-flex;
+}
 
 .dark .copy-btn { color: #4a5568; }
 

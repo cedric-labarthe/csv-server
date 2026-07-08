@@ -46,7 +46,7 @@ func DarkModeToggle() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<span x-show=\"!dark\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<span class=\"theme-toggle-icon theme-toggle-moon\" aria-hidden=\"true\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -54,7 +54,7 @@ func DarkModeToggle() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</span> <span x-show=\"dark\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</span> <span class=\"theme-toggle-icon theme-toggle-sun\" aria-hidden=\"true\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -71,10 +71,11 @@ func DarkModeToggle() templ.Component {
 		templ_7745c5c3_Err = button.Button(button.Props{
 			Size:    button.SizeIcon,
 			Variant: button.VariantGhost,
+			Class:   "theme-toggle",
 			Attributes: templ.Attributes{
-				"x-data":     "{ dark: document.documentElement.classList.contains('dark') }",
-				"x-on:click": "dark = !dark; document.documentElement.classList.toggle('dark', dark); localStorage.theme = dark ? 'dark' : 'light'",
-				"title":      "Toggle dark mode",
+				"type":    "button",
+				"onclick": "document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light')",
+				"title":   "Toggle dark mode",
 			},
 		}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {

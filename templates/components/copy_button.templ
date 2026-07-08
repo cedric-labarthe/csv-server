@@ -15,13 +15,15 @@ templ CopyButton(props CopyButtonProps) {
 		Variant: button.VariantGhost,
 		Class:   "copy-btn",
 		Attributes: templ.Attributes{
-			"x-data":       "{ copied: false }",
-			"x-on:click":   "navigator.clipboard.writeText($el.dataset.copy).then(function() { copied = true; setTimeout(function() { copied = false }, 1500) })",
-			"x-bind:class": "copied ? 'text-green-600' : ''",
-			"data-copy":    props.Value,
+			"type":      "button",
+			"data-copy": props.Value,
 		},
 	}) {
-		<span x-show="!copied">@icon.Copy(icon.Props{Size: 13})</span>
-		<span x-show="copied">@icon.CopyCheck(icon.Props{Size: 13})</span>
+		<span class="copy-btn-icon copy-btn-icon-default" aria-hidden="true">
+			@icon.Copy(icon.Props{Size: 13})
+		</span>
+		<span class="copy-btn-icon copy-btn-icon-copied" aria-hidden="true">
+			@icon.CopyCheck(icon.Props{Size: 13})
+		</span>
 	}
 }
