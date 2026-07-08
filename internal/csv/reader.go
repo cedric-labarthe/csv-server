@@ -1,12 +1,12 @@
 package csv
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/csv"
 	"fmt"
 	"io"
 	"io/fs"
+	"iter"
 	"os"
 	"path/filepath"
 	"sort"
@@ -143,7 +143,6 @@ func ReadTable(fsys fs.FS, name string) (Table, error) {
 }
 
 func parseTable(r io.Reader) (Table, error) {
-	// Buffer the content to allow peeking for delimiter detection.
 	raw, err := io.ReadAll(r)
 	if err != nil {
 		return Table{}, fmt.Errorf("reading content: %w", err)
@@ -153,22 +152,31 @@ func parseTable(r io.Reader) (Table, error) {
 
 	reader := csv.NewReader(bytes.NewReader(raw))
 	reader.Comma = delimiter
+	reader.FieldsPerRecord = -1
 	reader.TrimLeadingSpace = true
 	reader.LazyQuotes = true
-	reader.FieldsPerRecord = -1
 
 	headers, err := readFirstNonEmptyRow(reader)
 	if err != nil {
+		if err == io.EOF {
+			return Table{}, fmt.Errorf("reading headers: empty file")
+		}
 		return Table{}, fmt.Errorf("reading headers: %w", err)
 	}
+	expectedCols := len(headers)
 
-	allRows, err := reader.ReadAll()
-	if err != nil {
-		return Table{}, fmt.Errorf("reading rows: %w", err)
-	}
-
-	rows := make([][]string, 0, len(allRows))
-	for _, row := range allRows {
+	rows := make([][]string, 0)
+	for {
+		row, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return Table{}, fmt.Errorf("reading rows: %w", err)
+		}
+		if len(row) != expectedCols {
+			row = repairRow(row, expectedCols, delimiter)
+		}
 		if !isEmptyRow(row) {
 			rows = append(rows, row)
 		}
@@ -177,17 +185,60 @@ func parseTable(r io.Reader) (Table, error) {
 	return Table{Headers: headers, Rows: rows}, nil
 }
 
+func readFirstNonEmptyRow(reader *csv.Reader) ([]string, error) {
+	for {
+		row, err := reader.Read()
+		if err != nil {
+			return nil, err
+		}
+		if !isEmptyRow(row) {
+			return row, nil
+		}
+	}
+}
+
+// repairRow fixes rows split on too many delimiters. Surplus parts are merged
+// back into a single field. When expectedCols >= 2, extras are assumed to sit
+// in the second column (common for description fields). Otherwise the surplus
+// is merged into the last column. Rows with too few parts are padded.
+func repairRow(parts []string, expectedCols int, delimiter rune) []string {
+	if len(parts) == expectedCols {
+		return parts
+	}
+	if len(parts) < expectedCols {
+		out := make([]string, expectedCols)
+		copy(out, parts)
+		return out
+	}
+
+	delim := string(delimiter)
+	extra := len(parts) - expectedCols
+
+	if expectedCols == 1 {
+		return []string{strings.Join(parts, delim)}
+	}
+
+	// Merge surplus delimiters into the second column (index 1).
+	mergeEnd := 1 + extra + 1
+	out := make([]string, 0, expectedCols)
+	out = append(out, parts[0])
+	out = append(out, strings.Join(parts[1:mergeEnd], delim))
+	out = append(out, parts[mergeEnd:]...)
+	if len(out) == expectedCols {
+		return out
+	}
+
+	// Fallback: merge surplus into the last column.
+	merged := strings.Join(parts[expectedCols-1:], delim)
+	return append(parts[:expectedCols-1], merged)
+}
+
 // detectDelimiter scans the first non-empty line and picks the most frequent
 // candidate among ';', ',', '\t', '|'.
 func detectDelimiter(data []byte) rune {
 	candidates := []rune{';', ',', '\t', '|'}
 
-	scanner := bufio.NewScanner(bytes.NewReader(data))
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.TrimSpace(line) == "" {
-			continue
-		}
+	for line := range nonEmptyLines(data) {
 		best, bestCount := ',', 0
 		for _, c := range candidates {
 			count := strings.Count(line, string(c))
@@ -201,15 +252,28 @@ func detectDelimiter(data []byte) rune {
 	return ','
 }
 
-// readFirstNonEmptyRow skips blank rows and returns the first row with data.
-func readFirstNonEmptyRow(r *csv.Reader) ([]string, error) {
-	for {
-		row, err := r.Read()
-		if err != nil {
-			return nil, err
-		}
-		if !isEmptyRow(row) {
-			return row, nil
+func nonEmptyLines(data []byte) iter.Seq[string] {
+	return func(yield func(string) bool) {
+		for len(data) > 0 {
+			idx := bytes.IndexByte(data, '\n')
+			var line []byte
+			if idx < 0 {
+				line = data
+				data = nil
+			} else {
+				line = data[:idx]
+				data = data[idx+1:]
+			}
+			if len(line) > 0 && line[len(line)-1] == '\r' {
+				line = line[:len(line)-1]
+			}
+			trimmed := strings.TrimSpace(string(line))
+			if trimmed != "" && !yield(trimmed) {
+				return
+			}
+			if idx < 0 {
+				return
+			}
 		}
 	}
 }
