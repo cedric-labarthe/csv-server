@@ -34,7 +34,7 @@ templ Index(props IndexProps) {
 							if entry.IsDir {
 								@components.EntryItem(components.EntryItemProps{Name: entry.Name, Href: "/browse/" + components.JoinPath(props.CurrentPath, entry.Name), IsDir: true})
 							} else {
-								@components.EntryItem(components.EntryItemProps{Name: entry.Name, Href: "/view/" + components.JoinPath(props.CurrentPath, entry.Name), IsDir: false})
+								@components.EntryItem(components.EntryItemProps{Name: entry.Name, Href: "/view/" + components.JoinPath(props.CurrentPath, entry.Name), IsDir: false, Size: entry.Size})
 							}
 						}
 					</ul>

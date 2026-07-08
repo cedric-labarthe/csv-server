@@ -23,6 +23,7 @@ type Table struct {
 type Entry struct {
 	Name  string
 	IsDir bool
+	Size  int64 // bytes; set for files only
 }
 
 // ListEntries returns all directories and .csv files in dir, directories first.
@@ -37,7 +38,11 @@ func ListEntries(dir string) ([]Entry, error) {
 		if osEntry.IsDir() {
 			entries = append(entries, Entry{Name: osEntry.Name(), IsDir: true})
 		} else if strings.EqualFold(filepath.Ext(osEntry.Name()), ".csv") {
-			entries = append(entries, Entry{Name: osEntry.Name(), IsDir: false})
+			info, err := osEntry.Info()
+			if err != nil {
+				return nil, fmt.Errorf("reading file info for %q: %w", osEntry.Name(), err)
+			}
+			entries = append(entries, Entry{Name: osEntry.Name(), IsDir: false, Size: info.Size()})
 		}
 	}
 

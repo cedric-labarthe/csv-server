@@ -142,7 +142,7 @@ func Index(props IndexProps) templ.Component {
 									return templ_7745c5c3_Err
 								}
 							} else {
-								templ_7745c5c3_Err = components.EntryItem(components.EntryItemProps{Name: entry.Name, Href: "/view/" + components.JoinPath(props.CurrentPath, entry.Name), IsDir: false}).Render(ctx, templ_7745c5c3_Buffer)
+								templ_7745c5c3_Err = components.EntryItem(components.EntryItemProps{Name: entry.Name, Href: "/view/" + components.JoinPath(props.CurrentPath, entry.Name), IsDir: false, Size: entry.Size}).Render(ctx, templ_7745c5c3_Buffer)
 								if templ_7745c5c3_Err != nil {
 									return templ_7745c5c3_Err
 								}

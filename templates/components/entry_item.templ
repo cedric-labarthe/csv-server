@@ -9,6 +9,7 @@ type EntryItemProps struct {
 	Name  string
 	Href  string
 	IsDir bool
+	Size  int64
 }
 
 templ EntryItem(props EntryItemProps) {
@@ -19,9 +20,12 @@ templ EntryItem(props EntryItemProps) {
 				{ props.Name }
 			}
 		} else {
-			@button.Button(button.Props{Variant: button.VariantGhost, Href: props.Href, FullWidth: true, Class: "justify-start gap-2 hover:bg-gray-100 dark:hover:bg-zinc-800"}) {
-				@icon.File(icon.Props{Size: 16, Class: "text-blue-400"})
-				{ props.Name }
+			@button.Button(button.Props{Variant: button.VariantGhost, Href: props.Href, FullWidth: true, Class: "justify-between gap-2 hover:bg-gray-100 dark:hover:bg-zinc-800"}) {
+				<span class="flex items-center gap-2 min-w-0">
+					@icon.File(icon.Props{Size: 16, Class: "text-blue-400 shrink-0"})
+					<span class="truncate">{ props.Name }</span>
+				</span>
+				<span class="text-xs text-gray-500 dark:text-zinc-400 shrink-0 tabular-nums">{ formatFileSize(props.Size) }</span>
 			}
 		}
 	</li>

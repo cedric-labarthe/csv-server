@@ -175,6 +175,34 @@ func TestListEntriesDirsFirst(t *testing.T) {
 			t.Errorf("entries[%d] = {%q, isDir:%v}, want {%q, isDir:%v}",
 				i, entry.Name, entry.IsDir, want[i].name, want[i].isDir)
 		}
+		if entry.IsDir && entry.Size != 0 {
+			t.Errorf("entries[%d] dir size = %d, want 0", i, entry.Size)
+		}
+	}
+}
+
+func TestListEntriesFileSize(t *testing.T) {
+	dir := t.TempDir()
+
+	content := []byte("header1;header2\nvalue1;value2\n")
+	if err := os.WriteFile(filepath.Join(dir, "sample.csv"), content, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	entries, err := ListEntries(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(entries) != 1 {
+		t.Fatalf("got %d entries, want 1", len(entries))
+	}
+	entry := entries[0]
+	if entry.IsDir {
+		t.Fatal("expected file entry")
+	}
+	if entry.Size != int64(len(content)) {
+		t.Errorf("entry.Size = %d, want %d", entry.Size, len(content))
 	}
 }
 
